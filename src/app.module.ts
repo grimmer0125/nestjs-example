@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
     AuthorsModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true, //process.cwd() + 'src/schema.gql',
+      context: ({ req }) => ({ req }),
     }),
     AuthModule,
     UsersModule,
