@@ -10,15 +10,23 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { AuthorsService } from './authors.service';
 import { Author } from './models/author.model';
 
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 @Resolver(of => Author)
 export class AuthorsResolver {
   constructor(
     private authorsService: AuthorsService, // private postsService: PostsService,
   ) {}
 
+  // getAuthor(obj, args, context, info) <- how to get context, info ?
   @Query(returns => Author, { name: 'author' })
-  async getAuthor(@Args('id', { type: () => Int }) id: number) {
-    return this.authorsService.findOneById(id);
+  async getAuthor(@Args('id', { type: () => Int }) id2: number) {
+    console.log('author1');
+    // await timeout(60 * 6 * 1000); //10s
+    console.log('author2');
+    return this.authorsService.findOneById(id2);
   }
 
   //   @ResolveField('posts', returns => [Post])
