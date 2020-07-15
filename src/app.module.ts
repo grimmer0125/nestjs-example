@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: true, //process.cwd() + 'src/schema.gql',
       context: ({ req }) => ({ req }),
+      installSubscriptionHandlers: true,
     }),
     AuthModule,
     UsersModule,

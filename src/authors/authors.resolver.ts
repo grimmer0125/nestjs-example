@@ -1,4 +1,9 @@
 // https://github.com/nestjs/nest/blob/master/sample/23-graphql-code-first/src/recipes/recipes.resolver.ts
+import { PubSub } from 'graphql-subscriptions';
+
+const pubSub = new PubSub();
+let count = 7;
+
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 // import { NotFoundException } from '@nestjs/common';
@@ -9,6 +14,7 @@ import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 // import { Recipe } from './models/recipe.model';
 import { AuthorsService } from './authors.service';
 import { Author } from './models/author.model';
+import { Comment } from './models/comment.model';
 
 function timeout(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -34,4 +40,26 @@ export class AuthorsResolver {
   //     const { id } = author;
   //     return this.postsService.findAll({ authorId: id });
   //   }
+
+  @Subscription(returns => Comment, {
+    name: 'commentAdded',
+  })
+  addCommentHandler() {
+    return pubSub.asyncIterator('commentAdded');
+  }
+
+  @Mutation(returns => Comment)
+  async addComment(
+    @Args('postId', { type: () => Int }) postId: number,
+    @Args('comment') comment: string,
+  ) {
+    const newComment = {
+      id: count,
+      author: 'tesla',
+    };
+    count += 1;
+    // const newComment = this.commentsService.addComment({ id: postId, comment });
+    pubSub.publish('commentAdded', { commentAdded: newComment });
+    return newComment;
+  }
 }
