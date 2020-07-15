@@ -6,7 +6,6 @@ import { UseGuards } from '@nestjs/common';
 
 import { GqlAuthGuard, CurrentUser } from '../auth/gql-jwt-auth.guard';
 
-@Resolver(of => User)
 export class UsersResolver {
   @Query(returns => User)
   @UseGuards(GqlAuthGuard)
