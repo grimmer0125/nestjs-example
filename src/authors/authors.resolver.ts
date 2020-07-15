@@ -1,6 +1,9 @@
 // https://github.com/nestjs/nest/blob/master/sample/23-graphql-code-first/src/recipes/recipes.resolver.ts
 import { PubSub } from 'graphql-subscriptions';
 
+import { GqlAuthGuard, CurrentUser } from '../auth/gql-jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
+
 const pubSub = new PubSub();
 let count = 7;
 
@@ -41,6 +44,7 @@ export class AuthorsResolver {
   //     return this.postsService.findAll({ authorId: id });
   //   }
 
+  @UseGuards(GqlAuthGuard)
   @Subscription(returns => Comment, {
     name: 'commentAdded',
   })
@@ -48,6 +52,7 @@ export class AuthorsResolver {
     return pubSub.asyncIterator('commentAdded');
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(returns => Comment)
   async addComment(
     @Args('postId', { type: () => Int }) postId: number,
