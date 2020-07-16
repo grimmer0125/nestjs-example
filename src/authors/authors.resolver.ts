@@ -47,6 +47,13 @@ export class AuthorsResolver {
   @UseGuards(GqlAuthGuard)
   @Subscription(returns => Comment, {
     name: 'commentAdded',
+    filter: (payload, variables, context) => {
+      // besides context, client can send subscription's variables
+      if (payload?.commentAdded?.author === context?.req?.user?.username) {
+        return true;
+      }
+      return false;
+    },
   })
   addCommentHandler() {
     return pubSub.asyncIterator('commentAdded');
@@ -60,7 +67,7 @@ export class AuthorsResolver {
   ) {
     const newComment = {
       id: count,
-      author: 'tesla',
+      author: 'john',
     };
     count += 1;
     // const newComment = this.commentsService.addComment({ id: postId, comment });
