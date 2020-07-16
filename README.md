@@ -6,7 +6,7 @@
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
-  
+
   <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
     <p align="center">
 <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
@@ -26,28 +26,80 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A [Nest](https://github.com/nestjs/nest) TypeScript example repository. Test restful with JWT authorization and graphql (with authorization and subscription) on http://localhost:3001
 
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
 ```
 
-## Test
+Or use VSCode+F5 to launch debugging mode.
+
+## Try restful and graphql
+
+### In terminal
+
+Login to get token:
+
+```
+$ curl -X POST http://localhost:3001/auth/login -d '{"username": "john", "password": "changeme"}' -H "Content-Type: application/json"
+```
+
+Try using auth token to get profile:
+
+```
+$ curl http://localhost:3001/profile -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2Vybm..."
+```
+
+### In playground
+
+Open `http://localhost:3001/graphql`, test following graphql commands.
+
+```
+query whoami {
+  whoAmI {
+    id
+    firstName
+    lastName
+  }
+}
+
+subscription commentAdded{
+  commentAdded {
+    id
+    author
+  }
+}
+
+mutation addComment{
+  addComment(comment:"test", postId:7) {
+    id
+    author
+  }
+}
+
+# paste the token from terminal
+header:
+{
+  "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTU5NDgwNTc3MCwiZXhwIjoxNTk5OTg5NzcwfQ.yzjP-Y36P3__ED_RpfwkVIRdypGAGoXz9iDdta-KFB4"
+}
+```
+
+## Unit Tests and & End To End Tests
 
 ```bash
 # unit tests
@@ -59,17 +111,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-  Nest is [MIT licensed](LICENSE).
